@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Retail Customer Segmentation
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <div class="logo">
+            🛍️
+        </div>
+
+        <div>
+
+            <h1>
+                Retail Customer Segmentation
+            </h1>
+
+            <p>
+                Customer Purchase Behaviour Analysis
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         PREDICTION SECTION
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>
+            📊 Customer Purchase Information
+        </h2>
+
+        <p class="description">
+
+            Enter customer purchase details to identify
+            the customer segment using machine learning.
+
+        </p>
+
+
+        <div class="input-grid">
+
+
+            <!-- ORDERS -->
+
+            <div class="input-group">
+
+                <label>
+                    Number of Orders
+                </label>
+
+                <input
+                    type="number"
+                    id="numberOfOrders"
+                    placeholder="Example: 10"
+                    min="1"
+                >
+
+            </div>
+
+
+            <!-- QUANTITY -->
+
+            <div class="input-group">
+
+                <label>
+                    Total Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="totalQuantityInput"
+                    placeholder="Example: 100"
+                    min="1"
+                >
+
+            </div>
+
+
+            <!-- SPENDING -->
+
+            <div class="input-group">
+
+                <label>
+                    Total Spending
+                </label>
+
+                <input
+                    type="number"
+                    id="totalSpendingInput"
+                    placeholder="Example: 1000"
+                    min="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <!-- AOV -->
+
+            <div class="input-group">
+
+                <label>
+                    Average Order Value
+                </label>
+
+                <input
+                    type="number"
+                    id="averageOrderValueInput"
+                    placeholder="Example: 200"
+                    min="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="button-container">
+
+            <button
+                class="predict-btn"
+                onclick="predictCustomer()"
+            >
+
+                🔍 Predict Customer Segment
+
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="clearForm()"
+            >
+
+                Clear
+
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        ⏳ Analyzing customer behaviour...
+
+    </div>
+
+
+    <!-- =====================================================
+         RESULTS
+    ====================================================== -->
+
+    <section
+        class="card results-card"
+        id="results"
+    >
+
+        <h2>
+            🤖 Model Predictions
+        </h2>
+
+
+        <div class="result-grid">
+
+
+            <!-- K-MEANS -->
+
+            <div class="result-box kmeans">
+
+                <div class="result-icon">
+                    🟢
+                </div>
+
+                <h3>
+                    K-Means
+                </h3>
+
+                <p
+                    id="kmeansResult"
+                    class="result-text"
+                >
+                    -
+                </p>
+
+            </div>
+
+
+            <!-- HIERARCHICAL -->
+
+            <div class="result-box hierarchical">
+
+                <div class="result-icon">
+                    🔵
+                </div>
+
+                <h3>
+                    Hierarchical Clustering
+                </h3>
+
+                <p
+                    id="hierarchicalResult"
+                    class="result-text"
+                >
+                    -
+                </p>
+
+            </div>
+
+
+            <!-- DBSCAN -->
+
+            <div class="result-box dbscan">
+
+                <div class="result-icon">
+                    🟣
+                </div>
+
+                <h3>
+                    DBSCAN
+                </h3>
+
+                <p
+                    id="dbscanResult"
+                    class="result-text"
+                >
+                    -
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- FINAL RESULT -->
+
+        <div class="final-result">
+
+            <h3>
+                ⭐ Final Customer Segment
+            </h3>
+
+            <p id="customerType">
+                -
+            </p>
+
+        </div>
+
+
+        <!-- CUSTOMER ANALYSIS -->
+
+        <div class="analysis">
+
+            <h3>
+                📋 Customer Behaviour Analysis
+            </h3>
+
+
+            <div class="analysis-grid">
+
+
+                <div>
+
+                    <span>
+                        Orders
+                    </span>
+
+                    <strong id="displayOrders">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Quantity
+                    </span>
+
+                    <strong id="displayQuantity">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Total Spending
+                    </span>
+
+                    <strong id="displaySpending">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Average Order Value
+                    </span>
+
+                    <strong id="displayAverage">
+                        -
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section class="dashboard-section">
+
+
+        <div class="section-title">
+
+            📊 Customer Segmentation Dashboard
+
+        </div>
+
+
+        <p class="dashboard-subtitle">
+
+            Overview of customer behaviour and clustering results
+
+        </p>
+
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="dashboard-stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+                <div class="stat-label">
+                    Total Customers
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardTotalCustomers"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🛒
+                </div>
+
+                <div class="stat-label">
+                    Total Orders
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardTotalOrders"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📦
+                </div>
+
+                <div class="stat-label">
+                    Total Quantity
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardTotalQuantity"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div class="stat-label">
+                    Total Spending
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardTotalSpending"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- CHARTS -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- K-MEANS -->
+
+            <div class="chart-card">
+
+                <h3>
+                    📊 K-Means Cluster Distribution
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="kmeansChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- HIERARCHICAL -->
+
+            <div class="chart-card">
+
+                <h3>
+                    🌳 Hierarchical Cluster Distribution
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="hierarchicalChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- DBSCAN -->
+
+            <div class="chart-card">
+
+                <h3>
+                    🔵 DBSCAN Cluster Distribution
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="dbscanChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- PERFORMANCE -->
+
+            <div class="chart-card">
+
+                <h3>
+                    🎯 Algorithm Performance
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="scoreChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- AVERAGE ORDER VALUE -->
+
+        <div class="aov-card">
+
+            <div>
+
+                <span class="aov-icon">
+                    💳
+                </span>
+
+                <span class="aov-title">
+                    Average Order Value
+                </span>
+
+            </div>
+
+
+            <div
+                class="aov-value"
+                id="dashboardAverageOrderValue"
+            >
+
+                ₹0
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            Retail Customer Segmentation
+        </p>
+
+        <p>
+            K-Means |
+            Hierarchical Clustering |
+            DBSCAN
+        </p>
+
+    </footer>
+
+
+</div>
+
+
+<!-- CHART.JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/chart.js"
+></script>
+
+
+<!-- APPLICATION SCRIPT -->
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
